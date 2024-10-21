@@ -11,11 +11,9 @@ navegador = webdriver.Chrome()
 erros=[]
 inseridos=[]
 
-planilha_medicamentos = './insumos.xlsx'
+planilha = './insumos.xlsx'
 
-planilha_insumos = '.planilhas/'
-
-dados = pd.read_excel(planilha_medicamentos)
+dados = pd.read_excel(planilha)
 
 navegador.get('https://juizdefora-mg.vivver.com/amx/entrada_direta_produto')
 
@@ -50,6 +48,7 @@ for i, row in dados.iterrows():
     if qtd == 0 or qtd == '0' or math.isnan(qtd) or qtd == '' :
         continue
  
+    print(produto, qtd)
     #campo produto
     navegador.find_element(By.XPATH,'//*[@id="s2id_amx_entrada_direta_produto_codproduto"]').click()
     time.sleep(0.1)
@@ -95,10 +94,13 @@ for i, row in dados.iterrows():
         time.sleep(0.5)
         erros.append(produto)
         navegador.find_element(By.XPATH, '//*[@id="new_amx_entrada_direta_produto"]/div[2]/div[2]/div[2]/div/div[1]/button').click()
-        time.sleep(0.5  )
+        time.sleep(0.5)
     else:
         inseridos.append(produto)
 
+#salvar botao verde
+navegador.find_element(By.XPATH,'//*[@id="amx_entrada_direta_produto_save"]').click()
+time.sleep(3)
 
 #sucesso
 print(f'Medicamentos cadastrados com sucesso: {len(inseridos)}\n --------------------------------------')
